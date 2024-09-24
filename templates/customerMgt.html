@@ -16,7 +16,25 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
+        .navbar {
+            background-color: #007bff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #0056b3;
+        }
         .container {
             max-width: 900px;
             margin: auto;
@@ -25,7 +43,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         h1 {
             text-align: center;
             margin-bottom: 20px;
@@ -110,6 +127,11 @@
     </style>
 </head>
 <body>
+<nav class="navbar">
+    <a href="/">Home</a>
+    <a href="/customers">Customer Management</a>
+    <a href="/medicines">Medicine Management</a>
+</nav>
 <div class="container">
     <h1>Customer Management</h1>
     <form id="customerForm">

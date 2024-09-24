@@ -16,6 +16,25 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
+        .navbar {
+            background-color: #007bff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #0056b3;
+        }
 
         .container {
             max-width: 900px;
@@ -109,7 +128,13 @@
         }
     </style>
 </head>
+
 <body>
+<nav class="navbar">
+    <a href="/">Home</a>
+    <a href="/customers">Customer Management</a>
+    <a href="/medicines">Medicine Management</a>
+</nav>
 <div class="container">
     <h1>Medicine Management</h1>
     <form id="medicineForm">
@@ -118,6 +143,8 @@
         <input type="text" id="medicine_name" name="medicine_name" placeholder="Enter medicine name" required>
         <label for="medicine_price">Medicine Price:</label>
         <input type="number" id="medicine_price" name="medicine_price" placeholder="Enter medicine price" required>
+        <label for="medicine_Quantity">Medicine Quantity:</label>
+        <input type="number" id="medicine_quantity" name="medicine_Quantity" placeholder="Enter medicine quantity" required>
         <button type="submit">Save Medicine</button>
     </form>
 
@@ -127,6 +154,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -151,8 +179,9 @@
                         <td>${medicine.id}</td>
                         <td>${medicine.name}</td>
                         <td>${medicine.price}</td>
+                        <td>${medicine.quantity}</td>
                         <td>
-                            <button class="edit" onclick="editMedicine(${medicine.id}, '${medicine.name}', ${medicine.price})">Edit</button>
+                            <button class="edit" onclick="editMedicine(${medicine.id}, '${medicine.name}', ${medicine.price}, ${medicine.quantity})">Edit</button>
                             <button class="delete" onclick="deleteMedicine(${medicine.id})">Delete</button>
                         </td>
                     </tr>`;
@@ -166,6 +195,7 @@
         const medicineId = document.getElementById('medicine_id').value;
         const medicineName = document.getElementById('medicine_name').value;
         const medicinePrice = document.getElementById('medicine_price').value;
+        const medicineQuantity = document.getElementById('medicine_quantity').value;
 
         fetch('/api/medicines', {
             method: 'POST',
@@ -175,7 +205,8 @@
             body: JSON.stringify({
                 medicine_id: medicineId,
                 medicine_name: medicineName,
-                medicine_price: medicinePrice
+                medicine_price: medicinePrice,
+                medicine_quantity: medicineQuantity
             })
         })
             .then(response => response.json())
@@ -205,6 +236,7 @@
         document.getElementById('medicine_id').value = id;
         document.getElementById('medicine_name').value = name;
         document.getElementById('medicine_price').value = price;
+        document.getElementById('medicine_quantity').value = quantity;
     }
 
     window.onload = loadMedicines;

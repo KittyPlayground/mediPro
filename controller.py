@@ -5,6 +5,9 @@ customers = []
 medicines = []
 
 @app.route("/")
+def home():
+    return render_template('home.html')
+@app.route("/customers")
 def customer_management():
     return render_template('customerMgt.html', customers=customers)
 
@@ -55,19 +58,22 @@ def manage_medicines():
         medicine_id = data.get("medicine_id")
         medicine_name = data.get("medicine_name")
         medicine_price = data.get("medicine_price")
+        medicine_quantity = data.get("medicine_quantity")
 
         if medicine_id:
             for medicine in medicines:
                 if medicine['id'] == int(medicine_id):
                     medicine['name'] = medicine_name
                     medicine['price'] = medicine_price
+                    medicine['quantity'] = medicine_quantity
                     return jsonify({'message': 'Medicine updated successfully'})
         else:
             # Add a new medicine
             medicine = {
                 'id': len(medicines) + 1,
                 'name': medicine_name,
-                'price': medicine_price
+                'price': medicine_price,
+                'quantity': medicine_quantity
             }
             medicines.append(medicine)
             return jsonify({'message': 'Medicine added successfully'})
@@ -79,6 +85,10 @@ def delete_medicine(medicine_id):
     global medicines
     medicines = [medicine for medicine in medicines if medicine['id'] != medicine_id]
     return jsonify({'message': 'Medicine deleted successfully'})
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
