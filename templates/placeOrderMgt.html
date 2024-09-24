@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPro - Place Order</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .navbar {
+            background-color: #007bff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+        .navbar a:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        input, select, textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .alert {
+            display: none;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .alert.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <a href="/">Home</a>
+    <a href="/medicines">Medicine Management</a>
+    <a href="/customers">Customer Management</a>
+    <a href="/placeOrder">Place Order</a>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <h1>Place an Order</h1>
+    <form id="orderForm">
+        <label for="customer">Select Customer:</label>
+        <select id="customer" name="customer">
+            <option value="customer1">Kitty Perry</option>
+            <option value="customer2">Jaya Sri</option>
+        </select>
+
+        <label for="medicine">Select Medicine:</label>
+        <select id="medicine" name="medicine">
+            <option value="medicine1">Aspirin</option>
+            <option value="medicine2">Ibuprofen</option>
+        </select>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+
+        <label for="total">Total Price:</label>
+        <input type="number" id="total" name="total" readonly>
+
+        <label for="discount">Discount (%):</label>
+        <input type="number" id="discount" name="discount" placeholder="Enter discount" min="0" max="100">
+
+        <label for="priceToPay">Price to Pay:</label>
+        <input type="number" id="priceToPay" name="priceToPay" placeholder="Enter price paid by customer" required>
+
+        <label for="balance">Balance:</label>
+        <input type="number" id="balance" name="balance" readonly>
+
+        <label for="remarks">Additional Remarks (Optional):</label>
+        <textarea id="remarks" name="remarks" rows="4" placeholder="Any specific instructions or details?"></textarea>
+
+        <button type="submit" class="button">Submit Order</button>
+    </form>
+
+    <div id="alert" class="alert"></div>
+</div>
+
+<script>
+    const quantityInput = document.getElementById('quantity');
+    const discountInput = document.getElementById('discount');
+    const totalInput = document.getElementById('total');
+    const priceToPayInput = document.getElementById('priceToPay');
+    const balanceInput = document.getElementById('balance');
+    const orderForm = document.getElementById('orderForm');
+    const alertBox = document.getElementById('alert');
+    const pricePerItem = 10; // Assuming each medicine has a fixed price, e.g., $10.
+
+    function calculateTotalAndBalance() {
+        const quantity = parseInt(quantityInput.value) || 0;
+        const discount = parseInt(discountInput.value) || 0;
+        const priceToPay = parseFloat(priceToPayInput.value) || 0;
+
+        const total = quantity * pricePerItem;
+        const discountedTotal = total - (total * discount / 100);
+        const balance = discountedTotal - priceToPay;
+
+        totalInput.value = discountedTotal.toFixed(2);
+        balanceInput.value = balance.toFixed(2);
+    }
+
+    quantityInput.addEventListener('input', calculateTotalAndBalance);
+    discountInput.addEventListener('input', calculateTotalAndBalance);
+    priceToPayInput.addEventListener('input', calculateTotalAndBalance);
+    window.onload = calculateTotalAndBalance;
+
+    orderForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = {
+            customer: document.getElementById('customer').value,
+            medicine: document.getElementById('medicine').value,
+            quantity: document.getElementById('quantity').value,
+            total: document.getElementById('total').value,
+            discount: document.getElementById('discount').value,
+            priceToPay: document.getElementById('priceToPay').value,
+            balance: document.getElementById('balance').value,
+            remarks: document.getElementById('remarks').value,
+        };
+
+        fetch('/api/placeOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to submit order');
+                }
+            })
+            .then(data => {
+                alertBox.textContent = 'Order placed successfully!';
+                alertBox.className = 'alert success';
+                alertBox.style.display = 'block';
+            })
+            .catch(error => {
+                alertBox.textContent = 'Error: ' + error.message;
+                alertBox.className = 'alert error';
+                alertBox.style.display = 'block';
+            });
+    });
+</script>
+
+</body>
+</html>

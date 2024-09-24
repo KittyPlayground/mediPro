@@ -131,6 +131,7 @@
     <a href="/">Home</a>
     <a href="/customers">Customer Management</a>
     <a href="/medicines">Medicine Management</a>
+    <a href="/placeOrder">Place Order</a>
 </nav>
 <div class="container">
     <h1>Customer Management</h1>
@@ -140,6 +141,8 @@
         <input type="text" id="customer_name" name="customer_name" placeholder="Enter customer name" required>
         <label for="customer_email">Customer Email:</label>
         <input type="email" id="customer_email" name="customer_email" placeholder="Enter customer email" required>
+        <label for="customer_address">Customer Address:</label>
+        <input type="text" id="customer_address" name="customer_address" placeholder="Enter customer address">
         <button type="submit">Save Customer</button>
     </form>
 
@@ -149,6 +152,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Address</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -173,8 +177,9 @@
                         <td>${customer.id}</td>
                         <td>${customer.name}</td>
                         <td>${customer.email}</td>
+                        <td>${customer.address}</td>
                         <td>
-                            <button class="edit" onclick="editCustomer(${customer.id}, '${customer.name}', '${customer.email}')">Edit</button>
+                            <button class="edit" onclick="editCustomer(${customer.id}, '${customer.name}', '${customer.email},'${customer.address}')">Edit</button>
                             <button class="delete" onclick="deleteCustomer(${customer.id})">Delete</button>
                         </td>
                     </tr>`;
@@ -188,6 +193,7 @@
         const customerId = document.getElementById('customer_id').value;
         const customerName = document.getElementById('customer_name').value;
         const customerEmail = document.getElementById('customer_email').value;
+        const customerAddress = document.getElementById('customer_address').value;
 
         fetch('/api/customers', {
             method: 'POST',
@@ -197,7 +203,8 @@
             body: JSON.stringify({
                 customer_id: customerId,
                 customer_name: customerName,
-                customer_email: customerEmail
+                customer_email: customerEmail,
+                customer_address: customerAddress
             })
         })
             .then(response => response.json())
@@ -227,6 +234,7 @@
         document.getElementById('customer_id').value = id;
         document.getElementById('customer_name').value = name;
         document.getElementById('customer_email').value = email;
+        document.getElementById('customer_address').value = address;
     }
 
     window.onload = loadCustomers;
