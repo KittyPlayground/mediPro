@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - Customer Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        form input[type="text"], form input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        table td button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 4px;
+        }
+
+        button.edit {
+            background-color: #007bff;
+        }
+
+        button.delete {
+            background-color: #dc3545;
+        }
+
+        .edit:hover {
+            background-color: #0056b3;
+        }
+
+        .delete:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Customer Management</h1>
+
+    <!-- Customer Form for Adding or Updating -->
+    <form id="customerForm">
+        <input type="hidden" name="customer_id" id="customer_id">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name" placeholder="Enter customer name" required>
+
+        <label for="customer_email">Customer Email:</label>
+        <input type="email" id="customer_email" name="customer_email" placeholder="Enter customer email" required>
+
+        <button type="submit">Save Customer</button>
+    </form>
+
+    <!-- Customer Table -->
+    <table id="customerTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Dynamic content will be injected here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const customerForm = document.getElementById('customerForm');
+    const customerTableBody = document.querySelector('#customerTable tbody');
+
+    // Fetch existing customers from the backend
+    function loadCustomers() {
+        fetch('/api/customers')
+            .then(response => response.json())
+            .then(data => {
+                customerTableBody.innerHTML = '';
+                data.customers.forEach(customer => {
+                    const row = `
+                    <tr>
+                        <td>${customer.id}</td>
+                        <td>${customer.name}</td>
+                        <td>${customer.email}</td>
+                        <td>
+                            <button class="edit" onclick="editCustomer(${customer.id}, '${customer.name}', '${customer.email}')">Edit</button>
+                            <button class="delete" onclick="deleteCustomer(${customer.id})">Delete</button>
+                        </td>
+                    </tr>`;
+                    customerTableBody.insertAdjacentHTML('beforeend', row);
+                });
+            });
+    }
+
+    // Submit form using Fetch API
+    customerForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const customerId = document.getElementById('customer_id').value;
+        const customerName = document.getElementById('customer_name').value;
+        const customerEmail = document.getElementById('customer_email').value;
+
+        fetch('/api/customers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                customer_id: customerId,
+                customer_name: customerName,
+                customer_email: customerEmail
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadCustomers();
+                customerForm.reset();
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    // Delete customer using Fetch API
+    function deleteCustomer(id) {
+        if (confirm('Are you sure you want to delete this customer?')) {
+            fetch(`/api/customers/${id}`, {
+                method: 'DELETE',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    loadCustomers();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+    // Edit customer - Pre-fill the form
+    function editCustomer(id, name, email) {
+        document.getElementById('customer_id').value = id;
+        document.getElementById('customer_name').value = name;
+        document.getElementById('customer_email').value = email;
+    }
+
+    // Load customers when the page is loaded
+    window.onload = loadCustomers;
+</script>
+</body>
+</html>
