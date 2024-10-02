@@ -12,22 +12,34 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            background-color: #f4f4f4;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Top Navbar */
         .navbar {
             background-color: #007bff;
-            padding: 10px;
+            color: white;
+            padding: 20px;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            width: 100%;
         }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
         .navbar a {
             color: white;
             text-decoration: none;
+            margin-left: 20px;
             padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         .navbar a:hover {
@@ -42,27 +54,18 @@
         h1 {
             margin-bottom: 20px;
         }
-        .button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .button:hover {
-            background-color: #218838;
-        }
     </style>
 </head>
 <body>
-<nav class="navbar">
-    <a href="/">Home</a>
-    <a href="/customers">Customer Management</a>
-    <a href="/medicines">Medicine Management</a>
-    <a href="/placeOrder">Place Order</a>
-</nav>
+<div class="navbar">
+    <h2>Medical POS</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/customers">Customer Management</a>
+        <a href="/medicines">Medicine Management</a>
+        <a href="/placeOrder">Place Order</a>
+    </div>
+</div>
 <div class="container">
     <h1>Welcome to MediPro</h1>
 </div>

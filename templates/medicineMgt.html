@@ -116,26 +116,42 @@
 
         /* Modal */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
+                       display: none;
+                       position: fixed;
+                       z-index: 1;
+                       left: 0;
+                       top: 0;
+                       width: 100%;
+                       height: 100%;
+                       background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+                       justify-content: center; /* Center horizontally */
+                       align-items: center; /* Center vertically */
+                       backdrop-filter: blur(5px); /* Add a blur effect to the background */
+                       transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
+                   }
 
         .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
             position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -149,7 +165,6 @@
         .close-btn:hover {
             color: #000;
         }
-
         .modal form {
             display: flex;
             flex-direction: column;
@@ -314,21 +329,44 @@
 
     medicineForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const formData = new FormData(medicineForm);
-        const method = formData.get('medicine_id') ? 'PUT' : 'POST';
-        const url = formData.get('medicine_id') ? `/api/medicines/${formData.get('medicine_id')}` : '/api/medicines';
+
+        const formData = Object.fromEntries(new FormData(medicineForm)); // Convert form data to a plain object
+        const method = formData.medicine_id ? 'PUT' : 'POST';
+        const url = formData.medicine_id ? `/api/medicines/${formData.medicine_id}` : '/api/medicines';
+
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.innerText = 'Saving...';
+        loadingIndicator.className = 'loading';
+        document.body.appendChild(loadingIndicator);
 
         fetch(url, {
             method: method,
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData) // Convert form data to JSON
         })
-            .then(() => {
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
                 modal.style.display = 'none';
                 medicineForm.reset();
                 loadMedicines();
+                alert('Medicine saved successfully!');
             })
-            .catch(error => console.error('Error saving medicine:', error));
+            .catch(error => {
+                console.error('Error saving medicine:', error);
+                alert('Failed to save medicine. Please try again.');
+            })
+            .finally(() => {
+                document.body.removeChild(loadingIndicator);
+            });
     });
+
     loadMedicines();
 </script>
 </body>

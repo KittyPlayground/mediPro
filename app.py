@@ -58,7 +58,7 @@ def delete_customer(customer_id):
 @app.route("/api/medicines", methods=["GET", "POST"])
 def manage_medicines():
     if request.method == "POST":
-        data = request.json
+        data = request.get_json()  # Use get_json() to get JSON data
         medicine_id = data.get("medicine_id")
         medicine_name = data.get("medicine_name")
         medicine_price = data.get("medicine_price")
@@ -67,13 +67,11 @@ def manage_medicines():
         if medicine_id:
             # Update existing medicine
             Medicine.update(medicine_id, medicine_name, medicine_price, medicine_quantity)
-            return jsonify({'message': 'Medicine updated successfully'})
+            return jsonify({'message': 'Medicine updated successfully'}), 200
         else:
-            # Add a new medicine
             Medicine.add(medicine_name, medicine_price, medicine_quantity)
-            return jsonify({'message': 'Medicine added successfully'})
+            return jsonify({'message': 'Medicine added successfully'}), 201
 
-    # Fetch medicines from the database
     medicines = Medicine.get_all()
     return jsonify({'medicines': [{'id': m[0], 'name': m[1], 'price': m[2], 'quantity': m[3]} for m in medicines]})
 
