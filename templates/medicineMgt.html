@@ -57,6 +57,7 @@
         .main-content h1 {
             margin-bottom: 20px;
         }
+
         .add-btn {
             background-color: #28a745;
             color: white;
@@ -71,6 +72,7 @@
         .add-btn:hover {
             background-color: #218838;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -116,19 +118,19 @@
 
         /* Modal */
         .modal {
-                       display: none;
-                       position: fixed;
-                       z-index: 1;
-                       left: 0;
-                       top: 0;
-                       width: 100%;
-                       height: 100%;
-                       background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
-                       justify-content: center; /* Center horizontally */
-                       align-items: center; /* Center vertically */
-                       backdrop-filter: blur(5px); /* Add a blur effect to the background */
-                       transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
-                   }
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            backdrop-filter: blur(5px); /* Add a blur effect to the background */
+            transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
+        }
 
         .modal-content {
             background-color: #ffffff;
@@ -165,6 +167,7 @@
         .close-btn:hover {
             color: #000;
         }
+
         .modal form {
             display: flex;
             flex-direction: column;
@@ -264,7 +267,8 @@
             <label for="medicine_price">Medicine Price:</label>
             <input type="number" id="medicine_price" name="medicine_price" placeholder="Enter medicine price" required>
             <label for="medicine_quantity">Medicine Quantity:</label>
-            <input type="number" id="medicine_quantity" name="medicine_quantity" placeholder="Enter medicine quantity" required>
+            <input type="number" id="medicine_quantity" name="medicine_quantity" placeholder="Enter medicine quantity"
+                   required>
             <button type="submit">Save Medicine</button>
         </form>
     </div>
@@ -314,17 +318,24 @@
     }
 
     function editMedicine(id, name, price, quantity) {
+        const modal = document.getElementById('medicineModal');
+        modal.style.display = 'flex';
         document.getElementById('medicine_id').value = id;
         document.getElementById('medicine_name').value = name;
         document.getElementById('medicine_price').value = price;
         document.getElementById('medicine_quantity').value = quantity;
-        modal.style.display = 'flex';
+
     }
 
     function deleteMedicine(id) {
-        fetch(`/api/medicines/${id}`, { method: 'DELETE' })
-            .then(() => loadMedicines())
-            .catch(error => console.error('Error deleting medicine:', error));
+        if (confirm('Are you sure you want to delete this medicine?')) {
+            fetch(`/api/medicines/${id}`, {
+                method: 'DELETE'
+            })
+                .then(() => loadMedicines())
+                .catch(error => console.error('Error deleting medicine:', error));
+        }
+
     }
 
     medicineForm.addEventListener('submit', (event) => {

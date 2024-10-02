@@ -2,8 +2,8 @@ import mysql.connector
 from mysql.connector import Error
 from config import DATABASE_CONFIG
 
+
 def get_db_connection():
-    """ Create a database connection to a MySQL database """
     connection = None
     try:
         connection = mysql.connector.connect(**DATABASE_CONFIG)
@@ -12,8 +12,8 @@ def get_db_connection():
         print(f"The error '{e}' occurred")
     return connection
 
+
 def create_tables(connection):
-    """ Create tables in the MySQL database """
     cursor = connection.cursor()
     create_customer_table = """
     CREATE TABLE IF NOT EXISTS Customer (
@@ -60,12 +60,10 @@ def create_tables(connection):
     finally:
         cursor.close()
 
+
 # Usage
 if __name__ == "__main__":
     connection = get_db_connection()
     if connection:
         create_tables(connection)
         connection.close()  # Close the connection when done
-
-
-
