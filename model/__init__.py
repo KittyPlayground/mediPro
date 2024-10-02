@@ -1,16 +1,12 @@
 import mysql.connector
 from mysql.connector import Error
+from config import DATABASE_CONFIG
 
-def create_connection():
+def get_db_connection():
     """ Create a database connection to a MySQL database """
     connection = None
     try:
-        connection = mysql.connector.connect(
-            host='localhost',            # Change if needed
-            user='root',        # Replace with your MySQL username
-            password='Ijse@1234',    # Replace with your MySQL password
-            database='mediPro' # Replace with your database name
-        )
+        connection = mysql.connector.connect(**DATABASE_CONFIG)
         print("Connection to MySQL DB successful")
     except Error as e:
         print(f"The error '{e}' occurred")
@@ -61,10 +57,15 @@ def create_tables(connection):
         print("Tables created successfully")
     except Error as e:
         print(f"The error '{e}' occurred")
+    finally:
+        cursor.close()
 
 # Usage
 if __name__ == "__main__":
-    connection = create_connection()
+    connection = get_db_connection()
     if connection:
         create_tables(connection)
         connection.close()  # Close the connection when done
+
+
+

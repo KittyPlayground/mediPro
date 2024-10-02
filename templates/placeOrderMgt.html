@@ -90,8 +90,8 @@
 <!-- Navigation Bar -->
 <nav class="navbar">
     <a href="/">Home</a>
-    <a href="/medicines">Medicine Management</a>
     <a href="/customers">Customer Management</a>
+    <a href="/medicines">Medicine Management</a>
     <a href="/placeOrder">Place Order</a>
 </nav>
 
@@ -100,15 +100,12 @@
     <h1>Place an Order</h1>
     <form id="orderForm">
         <label for="customer">Select Customer:</label>
-        <select id="customer" name="customer">
-            <option value="customer1">Kitty Perry</option>
-            <option value="customer2">Jaya Sri</option>
+        <select id="customer" name="customer" required>
+            <option value="" selected>Select the customer</option>
         </select>
-
         <label for="medicine">Select Medicine:</label>
-        <select id="medicine" name="medicine">
-            <option value="medicine1">Aspirin</option>
-            <option value="medicine2">Ibuprofen</option>
+        <select id="medicine" name="medicine" required>
+            <option value="" selected>Select the medicine</option>
         </select>
 
         <label for="quantity">Quantity:</label>
@@ -134,7 +131,6 @@
 
     <div id="alert" class="alert"></div>
 </div>
-
 <script>
     const quantityInput = document.getElementById('quantity');
     const discountInput = document.getElementById('discount');
@@ -143,12 +139,18 @@
     const balanceInput = document.getElementById('balance');
     const orderForm = document.getElementById('orderForm');
     const alertBox = document.getElementById('alert');
-    const pricePerItem = 10; // Assuming each medicine has a fixed price, e.g., $10.
+    const customerSelect = document.getElementById('customer');
+    const medicineSelect = document.getElementById('medicine');
+
+    let medicinePrices = {}; // Store medicine prices here
 
     function calculateTotalAndBalance() {
         const quantity = parseInt(quantityInput.value) || 0;
         const discount = parseInt(discountInput.value) || 0;
         const priceToPay = parseFloat(priceToPayInput.value) || 0;
+
+        const selectedMedicineId = medicineSelect.value;
+        const pricePerItem = medicinePrices[selectedMedicineId] || 0;  // Use the selected medicine's price
 
         const total = quantity * pricePerItem;
         const discountedTotal = total - (total * discount / 100);
@@ -158,31 +160,83 @@
         balanceInput.value = balance.toFixed(2);
     }
 
+    function fetchCustomers() {
+        fetch('/api/customers')
+            .then(response => response.json())
+            .then(data => {
+                const customers = data.customers;
+                customerSelect.innerHTML = customers.map(customer =>
+                    `<option value="${customer.id}">${customer.name}</option>`
+                ).join('');
+            })
+            .catch(error => {
+                console.error('Error fetching customers:', error);
+                alertBox.textContent = 'Error loading customers. Please try again later.';
+                alertBox.className = 'alert error';
+                alertBox.style.display = 'block';
+            });
+    }
+
+    function fetchMedicines() {
+        fetch('/api/medicines')
+            .then(response => response.json())
+            .then(data => {
+                const medicines = data.medicines;
+
+                medicineSelect.innerHTML = medicines.map(medicine =>
+                    `<option value="${medicine.id}">${medicine.name}</option>`
+                ).join('');
+
+                // Store medicine prices in the object
+                medicines.forEach(medicine => {
+                    medicinePrices[medicine.id] = medicine.price;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching medicines:', error);
+                alertBox.textContent = 'Error loading medicines. Please try again later.';
+                alertBox.className = 'alert error';
+                alertBox.style.display = 'block';
+            });
+    }
+
     quantityInput.addEventListener('input', calculateTotalAndBalance);
     discountInput.addEventListener('input', calculateTotalAndBalance);
     priceToPayInput.addEventListener('input', calculateTotalAndBalance);
-    window.onload = calculateTotalAndBalance;
+    medicineSelect.addEventListener('change', calculateTotalAndBalance); // Recalculate when the medicine changes
+
+    window.onload = function() {
+        calculateTotalAndBalance();
+        fetchCustomers();
+        fetchMedicines();
+    };
 
     orderForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
+        // Optional validation before submission
+        if (!customerSelect.value || !medicineSelect.value || quantityInput.value <= 0) {
+            alertBox.textContent = 'Please fill all required fields correctly.';
+            alertBox.className = 'alert error';
+            alertBox.style.display = 'block';
+            return;
+        }
+
         const formData = {
-            customer: document.getElementById('customer').value,
-            medicine: document.getElementById('medicine').value,
-            quantity: document.getElementById('quantity').value,
-            total: document.getElementById('total').value,
-            discount: document.getElementById('discount').value,
-            priceToPay: document.getElementById('priceToPay').value,
-            balance: document.getElementById('balance').value,
+            customer_id: customerSelect.value,
+            medicine_id: medicineSelect.value,
+            quantity: quantityInput.value,
+            discount: discountInput.value,
+            priceToPay: priceToPayInput.value,
             remarks: document.getElementById('remarks').value,
         };
 
         fetch('/api/placeOrder', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
         })
             .then(response => {
                 if (response.ok) {
@@ -195,6 +249,9 @@
                 alertBox.textContent = 'Order placed successfully!';
                 alertBox.className = 'alert success';
                 alertBox.style.display = 'block';
+
+                orderForm.reset();
+                calculateTotalAndBalance(); // Reset totals
             })
             .catch(error => {
                 alertBox.textContent = 'Error: ' + error.message;
@@ -203,6 +260,7 @@
             });
     });
 </script>
+
 
 </body>
 </html>
