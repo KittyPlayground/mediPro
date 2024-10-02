@@ -14,81 +14,73 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Top Navbar */
         .navbar {
             background-color: #007bff;
-            padding: 10px;
+            color: white;
+            padding: 20px;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .navbar h2 {
+            margin: 0;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
+            margin-left: 20px;
             padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         .navbar a:hover {
             background-color: #0056b3;
         }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background-color: #fff;
+        .main-content {
+            flex: 1;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
         }
 
-        h1 {
-            text-align: center;
+        .main-content h1 {
             margin-bottom: 20px;
-            color: #333;
         }
 
-        form {
-            margin-bottom: 20px;
-            background-color: #fafafa;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        form label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        form input[type="text"], form input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        form button {
-            padding: 10px 20px;
+        /* Button to open modal */
+        .add-btn {
             background-color: #28a745;
-            color: #fff;
+            color: white;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 200px;
+            align-self: flex-end;
         }
 
-        form button:hover {
+        .add-btn:hover {
             background-color: #218838;
         }
 
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: white;
         }
 
         table th, table td {
@@ -126,29 +118,119 @@
         .delete:hover {
             background-color: #c82333;
         }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        /* Form inside the modal */
+        .modal form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal form label {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .modal form input[type="text"], .modal form input[type="number"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .modal form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            align-self: center;
+            width: 100%;
+        }
+
+        .modal form button:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar a {
+                padding: 10px;
+                margin-left: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+            }
+
+            .add-btn {
+                width: 100%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 
 <body>
-<nav class="navbar">
-    <a href="/">Home</a>
-    <a href="/customers">Customer Management</a>
-    <a href="/medicines">Medicine Management</a>
-    <a href="/placeOrder">Place Order</a>
-</nav>
-<div class="container">
-    <h1>Medicine Management</h1>
-    <form id="medicineForm">
-        <input type="hidden" name="medicine_id" id="medicine_id">
-        <label for="medicine_name">Medicine Name:</label>
-        <input type="text" id="medicine_name" name="medicine_name" placeholder="Enter medicine name" required>
-        <label for="medicine_price">Medicine Price:</label>
-        <input type="number" id="medicine_price" name="medicine_price" placeholder="Enter medicine price" required>
-        <label for="medicine_Quantity">Medicine Quantity:</label>
-        <input type="number" id="medicine_quantity" name="medicine_Quantity" placeholder="Enter medicine quantity" required>
-        <button type="submit">Save Medicine</button>
-    </form>
 
+<div class="navbar">
+    <h2>Medical POS</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/customers">Customer Management</a>
+        <a href="/medicines">Medicine Management</a>
+        <a href="/placeOrder">Place Order</a>
+    </div>
+</div>
+<div class="main-content">
+    <h1>Medicine Management</h1>
+    <button class="add-btn" id="openModalBtn">Add Medicine</button>
     <table id="medicineTable">
         <thead>
         <tr>
@@ -164,7 +246,38 @@
     </table>
 </div>
 
+<div class="modal" id="medicineModal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h2>Add Medicine</h2>
+        <form id="medicineForm">
+            <input type="hidden" name="medicine_id" id="medicine_id">
+            <label for="medicine_name">Medicine Name:</label>
+            <input type="text" id="medicine_name" name="medicine_name" placeholder="Enter medicine name" required>
+            <label for="medicine_price">Medicine Price:</label>
+            <input type="number" id="medicine_price" name="medicine_price" placeholder="Enter medicine price" required>
+            <label for="medicine_Quantity">Medicine Quantity:</label>
+            <input type="number" id="medicine_quantity" name="medicine_Quantity" placeholder="Enter medicine quantity" required>
+            <button type="submit">Save Medicine</button>
+        </form>
+    </div>
+</div>
 <script>
+    const modal = document.getElementById('medicineModal');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    openModalBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    })
+    closeModalBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    })
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    })
     const medicineForm = document.getElementById('medicineForm');
     const medicineTableBody = document.querySelector('#medicineTable tbody');
 
@@ -233,6 +346,8 @@
     }
 
     function editMedicine(id, name, price) {
+        const modal = document.getElementById("medicineModal");
+        modal.style.display = "flex";
         document.getElementById('medicine_id').value = id;
         document.getElementById('medicine_name').value = name;
         document.getElementById('medicine_price').value = price;

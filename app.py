@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request, jsonify
 from model.customer import Customer
 from model.medicine import Medicine
@@ -104,7 +103,6 @@ def get_medicines():
         return jsonify({'error': 'Failed to fetch medicines'}), 500
 
 
-# app.py
 @app.route("/api/placeOrder", methods=["POST"])
 def handle_order():
     try:
@@ -116,35 +114,30 @@ def handle_order():
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
 
-        order_id = data.get("order_id")  # Optional for updates
+        order_id = data.get("order_id")
         customer_id = data['customer_id']
         medicine_id = data['medicine_id']
         quantity = int(data['quantity'])
-        discount = float(data['discount'])  # Discount in percentage (e.g., 10 for 10%)
+        discount = float(data['discount'])
         price_to_pay = float(data['priceToPay'])
         remarks = data.get('remarks', '')
 
         # Fetch the medicine by ID
-        medicine = Medicine.get_medicines_names(medicine_id)  # This now returns a dict or None
+        medicine = Medicine.get_medicines_names(medicine_id)
 
         if not medicine:
             return jsonify({'error': 'Invalid medicine ID'}), 400
 
-        price_per_item = medicine['price']  # Access price here
+        price_per_item = medicine['price']
         total = quantity * price_per_item
         discounted_total = total - (total * discount / 100)
         balance = discounted_total - price_to_pay
 
-        if balance < 0:
-            return jsonify({'error': 'Price to pay exceeds the total amount'}), 400
-
         if order_id:
-            # Update existing order
             Order.update(order_id, customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
             logging.info(f"Order {order_id} updated successfully.")
             return jsonify({'message': 'Order updated successfully'}), 204
         else:
-            # Add a new order
             Order.add(customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
             logging.info("New order placed successfully.")
             return jsonify({'message': 'Order placed successfully'}), 201
@@ -155,7 +148,6 @@ def handle_order():
     except Exception as e:
         logging.error(f"Error occurred: {str(e)}")
         return jsonify({'error': 'An error occurred while processing your request'}), 500
-
 
 
 if __name__ == "__main__":

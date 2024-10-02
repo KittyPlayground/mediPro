@@ -12,16 +12,20 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
+            background-color: #f4f4f4;
+            margin: 0;
+            height: 100vh;
+
+
         }
         .navbar {
             background-color: #007bff;
-            padding: 10px;
+            color: white;
+            padding: 20px;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            width: 100%;
         }
         .navbar a {
             color: white;
@@ -34,8 +38,8 @@
         }
         .container {
             padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 800px;
+            margin: 15px auto;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: white;
@@ -86,14 +90,15 @@
     </style>
 </head>
 <body>
-
-<!-- Navigation Bar -->
-<nav class="navbar">
-    <a href="/">Home</a>
-    <a href="/customers">Customer Management</a>
-    <a href="/medicines">Medicine Management</a>
-    <a href="/placeOrder">Place Order</a>
-</nav>
+<div class="navbar">
+    <h2>Medical POS</h2>
+    <div>
+        <a href="/">Home</a>
+        <a href="/customers">Customer Management</a>
+        <a href="/medicines">Medicine Management</a>
+        <a href="/placeOrder">Place Order</a>
+    </div>
+</div>
 
 <!-- Main Content -->
 <div class="container">
