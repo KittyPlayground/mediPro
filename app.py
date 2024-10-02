@@ -129,6 +129,13 @@ def handle_order():
             return jsonify({'error': 'Invalid medicine ID'}), 400
 
         price_per_item = medicine['price']
+        available_quantity = medicine['quantity']  # Get the available quantity from the medicine table
+
+        # Check if there's enough stock for the order
+        if available_quantity < quantity:
+            return jsonify({'error': 'Insufficient stock for the selected medicine'}), 400
+
+        # Calculate totals
         total = quantity * price_per_item
         discounted_total = total - (total * discount / 100)
         balance = discounted_total - price_to_pay
@@ -136,11 +143,21 @@ def handle_order():
         if order_id:
             Order.update(order_id, customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
             logging.info(f"Order {order_id} updated successfully.")
-            return jsonify({'message': 'Order updated successfully'}), 204
         else:
             Order.add(customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
             logging.info("New order placed successfully.")
-            return jsonify({'message': 'Order placed successfully'}), 201
+
+        # Update the medicine stock after order
+        new_quantity = available_quantity - quantity
+        Medicine.update_quantity(medicine_id, new_quantity)
+
+        # Fetch updated medicines list
+        updated_medicines = Medicine.get_all()
+
+        return jsonify({
+            'message': 'Order placed successfully',
+            'medicines': [{'id': m[0], 'name': m[1], 'price': m[2], 'quantity': m[3]} for m in updated_medicines]
+        }), 201
 
     except ValueError as ve:
         logging.error(f"Value error: {str(ve)}")
