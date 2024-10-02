@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 
+from model.model import Customer, db
+
 app = Flask(__name__)
 customers = []
 medicines = []
@@ -37,24 +39,26 @@ def manage_customers():
         customer_address = data.get("customer_address")
 
         if customer_id:
-            for customer in customers:
-                if customer['id'] == int(customer_id):
-                    customer['name'] = customer_name
-                    customer['email'] = customer_email
-                    customer['address'] = customer_address
-                    return jsonify({'message': 'Customer updated successfully'})
+            customer = Customer.query.get(customer_id)
+            if customer:
+                customer.name = customer_name
+                customer.email = customer_email
+                customer.address = customer_address
+                db.session.commit()
+                return jsonify({'message': 'Customer updated successfully'})
         else:
-            customer = {
-                'id': len(customers) + 1,
-                'name': customer_name,
-                'email': customer_email,
-                'address': customer_address
-
-            }
-            customers.append(customer)
+            customer = Customer(
+                name=customer_name,
+                email=customer_email,
+                address=customer_address
+            )
+            db.session.add(customer)
+            db.session.commit()
             return jsonify({'message': 'Customer added successfully'})
 
-    return jsonify({'customers': customers})
+    customers = Customer.query.all()
+    return jsonify({'customers': [{'id': c.id, 'name': c.name, 'email': c.email, 'address': c.address} for c in customers]})
+
 
 
 @app.route("/api/customers/<int:customer_id>", methods=["DELETE"])
