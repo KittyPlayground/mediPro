@@ -46,14 +46,23 @@ def handle_order():
         balance = discounted_total - price_to_pay
 
         if order_id:
-            Order.update(order_id, customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
-            logging.info(f"Order {order_id} updated successfully.")
+            current_order = Order.get_order_by_id(order_id)  # Fetch current order details
+            if current_order:
+                current_quantity = current_order['quantity']
+                Order.update(order_id, customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
+
+                # Adjusting the medicine quantity
+                new_quantity = available_quantity - (quantity - current_quantity)  # Adjust based on new quantity
+                Medicine.update_quantity(medicine_id, new_quantity)  # Update the medicine quantity
+                logging.info(f"Order {order_id} updated successfully, medicine quantity updated to {new_quantity}.")
+            else:
+                logging.error(f"Order ID {order_id} not found.")
+                return jsonify({'error': 'Order not found'}), 404
         else:
             Order.add(customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks)
-            logging.info("New order placed successfully.")
-
-        new_quantity = available_quantity - quantity
-        Medicine.update_quantity(medicine_id, new_quantity)
+            new_quantity = available_quantity - quantity
+            Medicine.update_quantity(medicine_id, new_quantity)  # Update the medicine quantity
+            logging.info("New order placed successfully, medicine quantity updated.")
 
         updated_medicines = Medicine.get_all()
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediPro - Place Order</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -66,7 +67,7 @@
 
         .form-group {
             flex: 1;
-            min-width: 260px;
+            min-width: 250px;
         }
 
         .form-group label {
@@ -136,7 +137,7 @@
 </head>
 <body>
 <div class="navbar">
-    <h2>Medical POS</h2>
+    <h2>MediPro</h2>
     <div>
         <a href="/">Home</a>
         <a href="/customers">Customer Management</a>
@@ -186,10 +187,13 @@
             <textarea id="remarks" name="remarks" rows="4"
                       placeholder="Any specific instructions or details?"></textarea>
         </div>
-
         <div class="form-group" style="flex-basis: 100%;">
+            <button type="button" id="addToCartBtn">Add to Cart</button>
             <button type="submit" class="button">Submit Order</button>
+            <button type="button" id="viewDetailsBtn" class="button">View Details</button>
         </div>
+
+
     </form>
 
 
@@ -323,6 +327,27 @@
                 alertBox.style.display = 'block';
             });
     });
+    document.getElementById('viewDetailsBtn').addEventListener('click', function () {
+        const customerId = customerSelect.value;
+        const selectedMedicineId = medicineSelect.value;
+        const quantity = parseInt(quantityInput.value) || 0;
+        const discount = parseInt(discountInput.value) || 0;
+        const total = parseFloat(totalInput.value) || 0;
+
+        const selectedMedicine = medicinePrices[selectedMedicineId] ? medicineSelect.options[medicineSelect.selectedIndex].text : "Unknown Medicine";
+
+        const reportData = `
+            Customer ID: ${customerId}
+            Medicine Name: ${selectedMedicine}
+            Quantity: ${quantity}
+            Discount: ${discount}%
+            Total Price: $${total.toFixed(2)}
+        `;
+
+        alert(reportData);
+        console.log(reportData);
+    });
+
 </script>
 
 

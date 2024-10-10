@@ -25,13 +25,15 @@ def create_tables(connection):
     """
 
     create_medicine_table = """
-    CREATE TABLE IF NOT EXISTS Medicine (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        price FLOAT NOT NULL,
-        quantity INT NOT NULL
-    );
-    """
+CREATE TABLE IF NOT EXISTS Medicine (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price FLOAT NOT NULL,
+    quantity INT NOT NULL,
+    image_path VARCHAR(255)  
+);
+"""
+
 
     create_order_table = """
     CREATE TABLE IF NOT EXISTS Orders (
@@ -61,7 +63,6 @@ def create_tables(connection):
         cursor.close()
 
 
-# Usage
 if __name__ == "__main__":
     connection = get_db_connection()
     if connection:
