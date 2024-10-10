@@ -21,35 +21,84 @@
 
         }
 
-        .navbar {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
+     .navbar {
+                        background-color: #007bff;
+                        color: white;
+                        padding: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        position: relative;
+                    }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .navbar .nav-links {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
+            gap: 20px;
         }
 
         .navbar a {
             color: white;
             text-decoration: none;
             padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         .navbar a:hover {
             background-color: #0056b3;
         }
 
+        /* Hamburger Menu (for mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px;
+        }
+
+        /* Responsive Navbar Menu */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background-color: #007bff;
+                width: 150px;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .navbar .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Container */
         .container {
             padding: 20px;
             max-width: 800px;
             margin: 15px auto;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
+
 
         h1 {
             text-align: center;
@@ -133,19 +182,25 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+
     </style>
 </head>
-<body>
-<div class="navbar">
+<body><div class="navbar">
     <h2>MediPro</h2>
-    <div>
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!-- Navigation Links -->
+    <div class="nav-links">
         <a href="/">Home</a>
         <a href="/customers">Customer Management</a>
         <a href="/medicines">Medicine Management</a>
         <a href="/placeOrder">Place Order</a>
     </div>
 </div>
-
 <!-- Main Content -->
 <div class="container">
     <h1>Place an Order</h1>
@@ -187,8 +242,12 @@
             <textarea id="remarks" name="remarks" rows="4"
                       placeholder="Any specific instructions or details?"></textarea>
         </div>
+        <div class="form-group">
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required>
+        </div>
+
         <div class="form-group" style="flex-basis: 100%;">
-            <button type="button" id="addToCartBtn">Add to Cart</button>
             <button type="submit" class="button">Submit Order</button>
             <button type="button" id="viewDetailsBtn" class="button">View Details</button>
         </div>
@@ -200,6 +259,10 @@
     <div id="alert" class="alert"></div>
 </div>
 <script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
     const quantityInput = document.getElementById('quantity');
     const discountInput = document.getElementById('discount');
     const totalInput = document.getElementById('total');
@@ -296,6 +359,7 @@
             quantity: quantityInput.value,
             discount: discountInput.value,
             priceToPay: priceToPayInput.value,
+            customer_email: document.getElementById('customerEmail').value,
             remarks: document.getElementById('remarks').value,
         };
 
@@ -340,16 +404,22 @@
             Customer ID: ${customerId}
             Medicine Name: ${selectedMedicine}
             Quantity: ${quantity}
+            Total: $${total.toFixed(2)}
             Discount: ${discount}%
-            Total Price: $${total.toFixed(2)}
         `;
 
-        alert(reportData);
-        console.log(reportData);
+        // Create a PDF document using jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Add text to the PDF
+        doc.text("MediPro Order Details", 20, 20);
+        doc.text(reportData, 20, 30);
+
+        // Save the PDF
+        doc.save('order-details.pdf');
     });
 
 </script>
-
-
 </body>
 </html>

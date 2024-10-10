@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediPro - Medicine Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -20,6 +20,11 @@
             flex-direction: column;
         }
 
+        h1, h2 {
+            text-align: center;
+        }
+
+        /* Navbar */
         .navbar {
             background-color: #007bff;
             color: white;
@@ -46,6 +51,44 @@
             background-color: #0056b3;
         }
 
+        /* Hamburger Menu (for mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px;
+        }
+
+        /* Responsive Navbar Menu */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background-color: #007bff;
+                width: 150px;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .navbar .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -54,10 +97,7 @@
             margin-top: 20px;
         }
 
-        .main-content h1 {
-            margin-bottom: 20px;
-        }
-
+        /* Add Button */
         .add-btn {
             background-color: #28a745;
             color: white;
@@ -73,6 +113,7 @@
             background-color: #218838;
         }
 
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -91,6 +132,7 @@
             color: #333;
         }
 
+        /* Buttons inside table */
         table td button {
             padding: 6px 12px;
             margin-right: 5px;
@@ -201,37 +243,39 @@
             background-color: #218838;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .navbar a {
-                padding: 10px;
-                margin-left: 10px;
-            }
-
-            .navbar {
-                flex-direction: column;
-            }
-
-            .add-btn {
-                width: 100%;
-            }
-
-            table {
-                font-size: 14px;
-            }
-
             .modal-content {
                 width: 90%;
             }
         }
+
+        @media (max-width: 768px) {
+            .add-btn {
+                width: 100%;
+            }
+
+            table th, table td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+
+            table td button {
+                padding: 6px 10px;
+            }
+        }
     </style>
 </head>
-
 <body>
-
 <div class="navbar">
     <h2>MediPro</h2>
-    <div>
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!-- Navigation Links -->
+    <div class="nav-links">
         <a href="/">Home</a>
         <a href="/customers">Customer Management</a>
         <a href="/medicines">Medicine Management</a>
@@ -278,6 +322,10 @@
     </div>
 </div>
 <script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
     const modal = document.getElementById('medicineModal');
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -368,14 +416,23 @@
                 return response.json();
             })
             .then(data => {
-                modal.style.display = 'none';
-                medicineForm.reset();
+                swal.fire({
+                        icon: 'success',
+                        title: 'Medicine Added',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
                 loadMedicines();
-                alert('Medicine saved successfully!');
+                medicineForm.reset();
+                modal.style.display = 'none';
             })
             .catch(error => {
-                console.error('Error saving medicine:', error);
-                alert('Failed to save medicine. Please try again.');
+                swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Could not save medicine',
+                });
+                console.error('Error:', error);
             })
             .finally(() => {
                 document.body.removeChild(loadingIndicator);

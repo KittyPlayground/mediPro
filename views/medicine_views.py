@@ -16,8 +16,10 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','webp'}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 def allowed_file(image_path):
     return '.' in image_path and image_path.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @bp.route("/api/medicines", methods=["GET", "POST"])
 def manage_medicines():
@@ -56,9 +58,11 @@ def manage_medicines():
     ]
     return jsonify({'medicines': medicines_list})
 
+
 @bp.route('/uploads/<path:image_path>')
 def uploaded_file(image_path):
     return send_from_directory(UPLOAD_FOLDER, image_path)
+
 
 @bp.route("/api/medicines/<int:medicine_id>", methods=["DELETE"])
 def delete_medicine(medicine_id):
@@ -78,3 +82,9 @@ def update_medicine(medicine_id):
         return Medicine.update(medicine_id, medicine_name, medicine_price, medicine_quantity)
     else:
         return jsonify({'message': 'Medicine ID is required'}), 400
+
+
+@bp.route("/api/medicine-count", methods=["GET"])
+def get_medicine_count():
+    count = Medicine.get_count()
+    return jsonify({'count': count})

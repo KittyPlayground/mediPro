@@ -12,12 +12,13 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
         }
 
         /* Top Navbar */
@@ -29,16 +30,21 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            position: relative;
         }
 
         .navbar h2 {
             margin: 0;
         }
 
+        .navbar .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
         .navbar a {
             color: white;
             text-decoration: none;
-            margin-left: 20px;
             padding: 10px 15px;
             border-radius: 4px;
         }
@@ -47,8 +53,46 @@
             background-color: #0056b3;
         }
 
+        /* Hamburger Menu (for mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px;
+        }
+
+        /* Responsive Navbar Menu */
+        @media (max-width: 768px) {
+            .navbar .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background-color: #007bff;
+                width: 150px;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .navbar .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Container styling */
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: auto;
             padding: 20px;
             text-align: center;
@@ -56,22 +100,176 @@
 
         h1 {
             margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Dashboard Section */
+        .dashboard-count {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .count-card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            flex: 1;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .count-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .count-card h2 {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .count-card p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            margin-top: 40px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
 <div class="navbar">
     <h2>MediPro</h2>
-    <div>
+    <!-- Hamburger Menu -->
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!-- Navigation Links -->
+    <div class="nav-links">
         <a href="/">Home</a>
         <a href="/customers">Customer Management</a>
         <a href="/medicines">Medicine Management</a>
         <a href="/placeOrder">Place Order</a>
     </div>
 </div>
+
 <div class="container">
     <h1>Welcome to MediPro</h1>
+
+    <!-- Dashboard Section -->
+    <div class="dashboard-count">
+        <div class="count-card">
+            <h2 id="customerCount">0</h2>
+            <p>Customers</p>
+        </div>
+        <div class="count-card">
+            <h2 id="medicineCount">0</h2>
+            <p>Medicines</p>
+        </div>
+        <div class="count-card">
+            <h2 id="orderCount">0</h2>
+            <p>Orders</p>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-container">
+        <h3>Order Statistics</h3>
+        <canvas id="orderChart"></canvas>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Toggle the visibility of the nav links for mobile view
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
+
+    // Fetch data and update count cards
+    function loadCustomerCount() {
+        fetch('/api/customer-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('customerCount').textContent = data.count;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function loadMedicineCount() {
+        fetch('/api/medicine-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('medicineCount').textContent = data.count;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function loadOrderCount() {
+        fetch('/api/order-count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('orderCount').textContent = data.count;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Create Pie Chart for Order Statistics
+    function loadOrderChart() {
+        const ctx = document.getElementById('orderChart').getContext('2d');
+        const chartData = {
+            labels: ['Completed Orders', 'Pending Orders', 'Cancelled Orders'],
+            datasets: [{
+                label: 'Orders',
+                data: [120, 30, 10], // Example data, replace with real values
+                backgroundColor: ['#4caf50', '#ff9800', '#f44336'],
+                hoverOffset: 4
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: chartData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Order Status Overview'
+                    }
+                }
+            }
+        });
+    }
+
+    window.onload = function () {
+        loadCustomerCount();
+        loadMedicineCount();
+        loadOrderCount();
+        loadOrderChart();
+    };
+</script>
 
 </body>
 </html>

@@ -53,3 +53,13 @@ class Customer:
         connection.close()
         customer_list = [{"id": customer[0], "name": customer[1]} for customer in customers]
         return jsonify({"customers": customer_list})
+
+    @staticmethod
+    def get_count():
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM Customer")
+        count = cursor.fetchone()[0]
+        cursor.close()
+        connection.close()
+        return count

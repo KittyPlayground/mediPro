@@ -72,3 +72,14 @@ class Medicine:
         finally:
             if connection:
                 connection.close()
+
+    @staticmethod
+    def get_count():
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM Medicine")
+        count = cursor.fetchone()[0]
+        cursor.close()
+        connection.close()
+        return count
+

@@ -9,6 +9,12 @@ def customer_management():
     return render_template('customerMgt.html')
 
 
+@bp.route("/api/customer-count", methods=["GET"])
+def get_customer_count():
+    count = Customer.get_count()
+    return jsonify({'count': count})
+
+
 @bp.route("/api/customers", methods=["GET", "POST"])
 def manage_customers():
     if request.method == "POST":
