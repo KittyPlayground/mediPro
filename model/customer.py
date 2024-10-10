@@ -2,6 +2,7 @@
 from . import get_db_connection
 from flask import jsonify
 
+
 class Customer:
     @staticmethod
     def add(name, email, address):

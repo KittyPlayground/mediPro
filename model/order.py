@@ -1,6 +1,7 @@
 from . import get_db_connection
 from flask import jsonify
 
+
 class Order:
     @staticmethod
     def add(customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks):
@@ -12,7 +13,8 @@ class Order:
                     INSERT INTO Orders (customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(query, (customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks))
+                cursor.execute(query,
+                               (customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks))
             connection.commit()
             return jsonify({'message': 'Order added successfully'}), 201
         except Exception as e:
@@ -36,7 +38,8 @@ class Order:
                         discount = %s, price_to_pay = %s, balance = %s, remarks = %s 
                     WHERE id = %s
                 """
-                cursor.execute(query, (customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks, order_id))
+                cursor.execute(query, (
+                customer_id, medicine_id, quantity, total, discount, price_to_pay, balance, remarks, order_id))
             connection.commit()
             return jsonify({'message': 'Order updated successfully'}), 200
         except Exception as e:

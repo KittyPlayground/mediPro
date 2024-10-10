@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS Medicine (
 );
 """
 
-
     create_order_table = """
     CREATE TABLE IF NOT EXISTS Orders (
         id INT AUTO_INCREMENT PRIMARY KEY,

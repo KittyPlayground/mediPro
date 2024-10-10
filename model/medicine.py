@@ -1,6 +1,7 @@
 from . import get_db_connection
 from flask import jsonify
 
+
 class Medicine:
     @staticmethod
     def add(name, price, quantity, image_path):
@@ -20,6 +21,7 @@ class Medicine:
         finally:
             if connection:
                 connection.close()
+
     @staticmethod
     def update_quantity(medicine_id, new_quantity):
         connection = None
@@ -56,17 +58,18 @@ class Medicine:
             if connection:
                 connection.close()
 
-
     @staticmethod
     def get_medicines_names(medicine_id):
         connection = None
         try:
             connection = get_db_connection()
             with connection.cursor() as cursor:
-                cursor.execute("SELECT id, name, price, quantity, image_path FROM Medicine WHERE id = %s", (medicine_id,))
+                cursor.execute("SELECT id, name, price, quantity, image_path FROM Medicine WHERE id = %s",
+                               (medicine_id,))
                 medicines = cursor.fetchall()
             if medicines:
-                return {"id": medicines[0][0], "name": medicines[0][1], "price": medicines[0][2], "quantity": medicines[0][3], "image_path": medicines[0][4]}
+                return {"id": medicines[0][0], "name": medicines[0][1], "price": medicines[0][2],
+                        "quantity": medicines[0][3], "image_path": medicines[0][4]}
             else:
                 return None  # Return None if no medicine found
         finally:
@@ -82,4 +85,3 @@ class Medicine:
         cursor.close()
         connection.close()
         return count
-

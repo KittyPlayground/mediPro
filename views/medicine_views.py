@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template,send_from_directory
+from flask import Blueprint, request, jsonify, render_template, send_from_directory
 from model.medicine import Medicine
 import os
 from werkzeug.utils import secure_filename
@@ -12,7 +12,7 @@ def medicines_management():
 
 
 UPLOAD_FOLDER = '/Users/tharushikawodya/Developer/mediPro/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','webp'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 

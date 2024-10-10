@@ -24,16 +24,16 @@
 
         }
 
-     .navbar {
-                        background-color: #007bff;
-                        color: white;
-                        padding: 20px;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        width: 100%;
-                        position: relative;
-                    }
+        .navbar {
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
 
         .navbar h2 {
             margin: 0;
@@ -52,10 +52,9 @@
         }
 
         .navbar a:hover {
-            background-color: #0056b3;
+            color: blue;
         }
 
-        /* Hamburger Menu (for mobile) */
         .hamburger {
             display: none;
             flex-direction: column;
@@ -69,7 +68,6 @@
             margin: 4px;
         }
 
-        /* Responsive Navbar Menu */
         @media (max-width: 768px) {
             .navbar .nav-links {
                 display: none;
@@ -92,7 +90,6 @@
             }
         }
 
-        /* Container */
         .container {
             padding: 20px;
             max-width: 800px;
@@ -188,7 +185,8 @@
 
     </style>
 </head>
-<body><div class="navbar">
+<body>
+<div class="navbar">
     <h2>MediPro</h2>
     <!-- Hamburger Menu -->
     <div class="hamburger" onclick="toggleMenu()">
@@ -262,6 +260,7 @@
         const navLinks = document.querySelector('.nav-links');
         navLinks.classList.toggle('active');
     }
+
     const quantityInput = document.getElementById('quantity');
     const discountInput = document.getElementById('discount');
     const totalInput = document.getElementById('total');
@@ -422,7 +421,7 @@
         `;
 
         // Create a PDF document using jsPDF
-        const { jsPDF } = window.jspdf;
+        const {jsPDF} = window.jspdf;
         const doc = new jsPDF();
 
         // Add text to the PDF

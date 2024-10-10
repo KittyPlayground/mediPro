@@ -12,6 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -25,9 +26,8 @@
             text-align: center;
         }
 
-        /* Navbar */
         .navbar {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
             color: white;
             padding: 20px;
             display: flex;
@@ -49,10 +49,9 @@
         }
 
         .navbar a:hover {
-            background-color: #0056b3;
+            color: blue;
         }
 
-        /* Hamburger Menu (for mobile) */
         .hamburger {
             display: none;
             flex-direction: column;
@@ -66,7 +65,6 @@
             margin: 4px;
         }
 
-        /* Responsive Navbar Menu */
         @media (max-width: 768px) {
             .navbar .nav-links {
                 display: none;
@@ -89,7 +87,6 @@
             }
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px;
@@ -98,7 +95,6 @@
             margin-top: 20px;
         }
 
-        /* Add Button */
         .add-btn {
             background-color: #28a745;
             color: white;
@@ -113,16 +109,19 @@
         .add-btn:hover {
             background-color: #218838;
         }
+
         .add-btn i {
             margin-right: 8px;
         }
 
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         table th, table td {
@@ -136,7 +135,6 @@
             color: #333;
         }
 
-        /* Buttons inside table */
         table td button {
             padding: 6px 12px;
             margin-right: 5px;
@@ -170,11 +168,11 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            backdrop-filter: blur(5px); /* Add a blur effect to the background */
-            transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
         }
 
         .modal-content {
@@ -213,6 +211,7 @@
         .close-btn:hover {
             color: #000;
         }
+
         .modal form {
             display: flex;
             flex-direction: column;
@@ -230,6 +229,7 @@
             border-radius: 4px;
             width: 100%;
         }
+
         .modal form input[type="text"], .modal form input[type="email"] {
             padding: 10px;
             margin-bottom: 15px;
@@ -252,6 +252,7 @@
         .modal form button:hover {
             background-color: #218838;
         }
+
         @media (max-width: 768px) {
             .modal-content {
                 width: 90%;
@@ -298,8 +299,8 @@
 <div class="main-content">
     <h1>Customer Management</h1>
     <button class="add-btn" id="openModalBtn">
-    <i class="fas fa-plus"></i> Add Customer
-</button>
+        <i class="fas fa-plus"></i> Add Customer
+    </button>
 
 
     <table id="customerTable">
@@ -471,6 +472,7 @@
     }
 
     window.onload = loadCustomers;
+
     function toggleMenu() {
         const navLinks = document.querySelector('.nav-links');
         navLinks.classList.toggle('active');
