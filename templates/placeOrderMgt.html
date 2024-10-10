@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediPro - Place Order</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -251,12 +254,8 @@
             <button type="submit" class="button">Submit Order</button>
             <button type="button" id="viewDetailsBtn" class="button">View Details</button>
         </div>
-
-
     </form>
 
-
-    <div id="alert" class="alert"></div>
 </div>
 <script>
     function toggleMenu() {
@@ -301,10 +300,11 @@
                 ).join('');
             })
             .catch(error => {
-                console.error('Error fetching customers:', error);
-                alertBox.textContent = 'Error loading customers. Please try again later.';
-                alertBox.className = 'alert error';
-                alertBox.style.display = 'block';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error loading customers. Please try again later.'
+                });
             });
     }
 
@@ -324,10 +324,11 @@
                 });
             })
             .catch(error => {
-                console.error('Error fetching medicines:', error);
-                alertBox.textContent = 'Error loading medicines. Please try again later.';
-                alertBox.className = 'alert error';
-                alertBox.style.display = 'block';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error loading medicines. Please try again later.'
+                });
             });
     }
 
@@ -347,9 +348,11 @@
 
         // Optional validation before submission
         if (!customerSelect.value || !medicineSelect.value || quantityInput.value <= 0) {
-            alertBox.textContent = 'Please fill all required fields correctly.';
-            alertBox.className = 'alert error';
-            alertBox.style.display = 'block';
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please fill all required fields correctly.'
+            });
             return;
         }
 
@@ -378,17 +381,27 @@
                 }
             })
             .then(data => {
-                alertBox.textContent = 'Order placed successfully!';
-                alertBox.className = 'alert success';
-                alertBox.style.display = 'block';
-
+                Swal.fire({
+                    icon: 'success',
+                    html: '<i class="fas fa-shopping-cart" style="font-size: 40px; color: #28a745;"></i>',
+                    title: 'Success',
+                    text: 'Order placed successfully!',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
                 orderForm.reset();
                 calculateTotalAndBalance();
             })
             .catch(error => {
-                alertBox.textContent = 'Error: ' + error.message;
-                alertBox.className = 'alert error';
-                alertBox.style.display = 'block';
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Out of Stock',
+                    text: 'Please check stock and buy available items.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+
+                });
             });
     });
     document.getElementById('viewDetailsBtn').addEventListener('click', function () {

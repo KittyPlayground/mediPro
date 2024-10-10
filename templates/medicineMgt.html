@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MediPro - Medicine Management</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -111,6 +112,9 @@
 
         .add-btn:hover {
             background-color: #218838;
+        }
+        .add-btn i {
+            margin-right: 8px; /* Space between icon and text */
         }
 
         /* Table Styles */
@@ -284,7 +288,9 @@
 </div>
 <div class="main-content">
     <h1>Medicine Management</h1>
-    <button class="add-btn" id="openModalBtn">Add Medicine</button>
+    <button class="add-btn" id="openModalBtn">
+        <i class="fas fa-plus"></i> Add Medicine
+    </button>
     <table id="medicineTable">
         <thead>
         <tr>
@@ -418,6 +424,7 @@
             .then(data => {
                 swal.fire({
                         icon: 'success',
+                        html: '<i class="fas fa-pills" style="font-size: 40px; color: #28a745;"></i>',
                         title: 'Medicine Added',
                         text: data.message,
                         confirmButtonText: 'OK'
