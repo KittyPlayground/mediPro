@@ -115,7 +115,9 @@
         }
 
         table {
-            width: 100%;
+            width: 90vw;
+            margin-left: auto;
+            margin-right: auto;
             border-collapse: collapse;
             margin-top: 20px;
             background-color: white;
@@ -133,6 +135,20 @@
         table th {
             background-color: #f8f9fa;
             color: #333;
+        }
+
+        table td button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 4px;
+        }
+        table tbody tr:hover {
+            background-color: #007bff; /* Change the row background color on hover */
+            color: white; /* Change the text color on hover */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition effect */
         }
 
         table td button {
@@ -184,6 +200,7 @@
             position: relative;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.3s ease;
+            margin: 15% auto;
         }
 
         /* Keyframe for modal animation */
@@ -215,42 +232,41 @@
         .modal form {
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
         .modal form label {
             margin-bottom: 8px;
             color: #333;
+            font-weight: bold;
         }
 
         .modal form input[type="text"], .modal form input[type="number"] {
             padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
         }
 
         .modal form input[type="text"], .modal form input[type="email"] {
             padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
         }
 
         .modal form button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: #fff;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            align-self: center;
-            width: 100%;
+            transition: background-color 0.3s;
         }
 
         .modal form button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
 
         @media (max-width: 768px) {

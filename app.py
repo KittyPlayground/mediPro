@@ -13,7 +13,6 @@ app.register_blueprint(order_views.bp)
 
 
 def worker():
-    # Simulating some background work
     time.sleep(5)  # Simulate time-consuming task
     print("Background task completed.")
 

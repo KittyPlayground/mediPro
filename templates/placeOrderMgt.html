@@ -20,8 +20,6 @@
             background-color: #f4f4f4;
             margin: 0;
             height: 100vh;
-
-
         }
 
         .navbar {
@@ -92,11 +90,12 @@
 
         .container {
             padding: 20px;
-            max-width: 800px;
+            max-width: 70vw;
             margin: 15px auto;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: white;
+
         }
 
 
@@ -105,23 +104,21 @@
             margin-bottom: 20px;
             color: #333;
         }
-
         form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
+             display: grid;
+             grid-template-columns: repeat(2, 1fr);
+             gap: 25px;
+             width: 80%;
+             margin: 0 auto;
 
+         }
         .form-group {
-            flex: 1;
-            min-width: 250px;
+            width: 100%;
         }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
+        .form-group.full-width {
+            grid-column: span 2;
+            display: flex;
+            justify-content: space-between;
         }
 
         #customer, #medicine, #quantity {
@@ -153,36 +150,61 @@
         }
 
         .button {
-            background-color: #28a745;
+            background-color: #007bff; /* Strong, modern blue for primary action */
             color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         .button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
-        .alert {
-            display: none;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
+        .button:active {
+            transform: translateY(0);
         }
 
-        .alert.success {
-            background-color: #d4edda;
-            color: #155724;
+        #viewDetailsBtn {
+            background-color: rgba(91, 33, 63, 0.85);
         }
 
-        .alert.error {
-            background-color: #f8d7da;
-            color: #721c24;
+        #viewDetailsBtn:hover {
+            background-color: rgba(91, 33, 63, 0.53);
+        }
+        input, select, textarea {
+            transition: all 0.3s ease-in-out;
         }
 
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
+        }
+
+        .button {
+            transition: transform 0.3s ease;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+            .container{
+                max-width: 80vw;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+        }
     </style>
 </head>
 <body>
@@ -238,19 +260,19 @@
             <label for="balance">Balance:</label>
             <input type="number" id="balance" name="balance" readonly>
         </div>
+
+        <div class="form-group">
+            <label for="customerEmail">Customer Email:</label>
+            <input type="email" id="customerEmail" name="customerEmail" required placeholder="Enter email to receive receipt">
+        </div>
         <div class="form-group">
             <label for="remarks">Additional Remarks (Optional):</label>
             <textarea id="remarks" name="remarks" rows="4"
                       placeholder="Any specific instructions or details?"></textarea>
         </div>
-        <div class="form-group">
-            <label for="customerEmail">Customer Email:</label>
-            <input type="email" id="customerEmail" name="customerEmail" required>
-        </div>
-
-        <div class="form-group" style="flex-basis: 100%;">
+        <div class="form-group full-width">
             <button type="submit" class="button">Submit Order</button>
-            <button type="button" id="viewDetailsBtn" class="button">View Details</button>
+            <button type="button" id="viewDetailsBtn" class="button">Get Receipt</button>
         </div>
     </form>
 

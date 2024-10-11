@@ -12,7 +12,7 @@ def medicines_management():
 
 
 UPLOAD_FOLDER = '/Users/tharushikawodya/Developer/mediPro/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp','avif'}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
